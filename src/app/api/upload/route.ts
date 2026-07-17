@@ -6,6 +6,7 @@ import {
   getSupabaseWriteClient,
   SUPABASE_BUCKET,
 } from "@/lib/supabase";
+import { isReadOnlyDeployment } from "@/lib/data";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,13 @@ function safeName(name: string): string {
 }
 
 export async function POST(req: Request) {
+  if (isReadOnlyDeployment()) {
+    return NextResponse.json(
+      { error: "Uploads are disabled on this deployment until Supabase storage is connected." },
+      { status: 501 }
+    );
+  }
+
   const form = await req.formData();
   const file = form.get("file");
 

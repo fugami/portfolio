@@ -13,6 +13,6 @@ export const btnGhost =
   "inline-flex items-center justify-center rounded-md border border-ink/30 bg-transparent px-4 py-2 text-base font-medium text-ink transition hover:bg-black/5 disabled:opacity-50";
 
 export const btnDanger =
-  "inline-flex items-center justify-center rounded-md border border-red-800/40 bg-transparent px-3 py-1.5 text-sm font-medium text-red-900 transition hover:bg-red-900/10";
+  "inline-flex items-center justify-center rounded-md border border-red-800/40 bg-transparent px-3 py-1.5 text-sm font-medium text-red-900 transition hover:bg-red-900/10 disabled:opacity-50";
 
 export const cardClass = "rounded-lg border border-ink/15 bg-white/40 p-4";

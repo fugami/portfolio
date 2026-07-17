@@ -1,6 +1,6 @@
 import Link from "next/link";
 import AdminDashboard from "@/components/admin/AdminDashboard";
-import { getProjects, getRoles } from "@/lib/data";
+import { getProjects, getRoles, isReadOnlyDeployment } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +12,7 @@ export default async function AdminPage() {
     getRoles(),
   ]);
   const supabase = isSupabaseConfigured();
+  const readOnly = isReadOnlyDeployment();
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-5xl px-6 py-10 font-garamond">
@@ -36,7 +37,16 @@ export default async function AdminPage() {
         </span>
       </div>
 
-      <AdminDashboard projects={projects} roles={roles} />
+      {readOnly && (
+        <div className="mb-6 rounded-md border border-amber-800/30 bg-amber-700/10 px-4 py-3 text-base text-amber-950">
+          This deployment is <strong>read-only</strong> — it serves the content
+          snapshot committed to the repo. To edit online, connect Supabase (env
+          vars from <code>.env.local.example</code>). Until then: edit locally,
+          run <code>npm run publish-content</code>, and push.
+        </div>
+      )}
+
+      <AdminDashboard projects={projects} roles={roles} readOnly={readOnly} />
     </main>
   );
 }

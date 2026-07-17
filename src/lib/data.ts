@@ -10,28 +10,47 @@ import {
   getSupabaseWriteClient,
   isSupabaseConfigured,
 } from "./supabase";
+// Static import so the seed snapshot is bundled into serverless builds, where
+// runtime files under data/ don't exist and the filesystem is read-only.
+import seedJson from "../../data/seed.json";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STORE_PATH = path.join(DATA_DIR, "store.json");
-const SEED_PATH = path.join(DATA_DIR, "seed.json");
+
+/**
+ * True on hosted deployments (Vercel) that have no database configured.
+ * Pages serve the seed snapshot committed with the build; writes are rejected.
+ */
+export function isReadOnlyDeployment(): boolean {
+  return Boolean(process.env.VERCEL) && !isSupabaseConfigured();
+}
 
 // ---------------------------------------------------------------------------
 // Local JSON store (fallback)
 // ---------------------------------------------------------------------------
 
 async function readLocalStore(): Promise<Store> {
+  if (isReadOnlyDeployment()) {
+    // Clone: callers sort/mutate the arrays they get back.
+    return structuredClone(seedJson) as unknown as Store;
+  }
   try {
     const raw = await fs.readFile(STORE_PATH, "utf8");
     return JSON.parse(raw) as Store;
   } catch {
     // First run: seed the working store from the committed seed file.
-    const seed = JSON.parse(await fs.readFile(SEED_PATH, "utf8")) as Store;
+    const seed = structuredClone(seedJson) as unknown as Store;
     await writeLocalStore(seed);
     return seed;
   }
 }
 
 async function writeLocalStore(store: Store): Promise<void> {
+  if (isReadOnlyDeployment()) {
+    throw new Error(
+      "This deployment is read-only: connect Supabase to edit content online, or edit locally and push."
+    );
+  }
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2), "utf8");
 }

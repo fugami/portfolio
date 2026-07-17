@@ -14,9 +14,11 @@ type Section = "projects" | "roles";
 export default function AdminDashboard({
   projects,
   roles,
+  readOnly = false,
 }: {
   projects: Project[];
   roles: Role[];
+  readOnly?: boolean;
 }) {
   const router = useRouter();
   const [section, setSection] = useState<Section>("projects");
@@ -64,7 +66,11 @@ export default function AdminDashboard({
       {section === "projects" ? (
         <div className="space-y-3">
           <div className="flex justify-end">
-            <button className={btnPrimary} onClick={() => setEditingProject(null)}>
+            <button
+              className={btnPrimary}
+              disabled={readOnly}
+              onClick={() => setEditingProject(null)}
+            >
               + New project
             </button>
           </div>
@@ -94,10 +100,10 @@ export default function AdminDashboard({
                 </div>
               </div>
               <div className="flex shrink-0 gap-2">
-                <button className={btnGhost} onClick={() => setEditingProject(p)}>
+                <button className={btnGhost} disabled={readOnly} onClick={() => setEditingProject(p)}>
                   Edit
                 </button>
-                <button className={btnDanger} onClick={() => removeProject(p.id)}>
+                <button className={btnDanger} disabled={readOnly} onClick={() => removeProject(p.id)}>
                   Delete
                 </button>
               </div>
@@ -111,7 +117,11 @@ export default function AdminDashboard({
       ) : (
         <div className="space-y-3">
           <div className="flex justify-end">
-            <button className={btnPrimary} onClick={() => setEditingRole(null)}>
+            <button
+              className={btnPrimary}
+              disabled={readOnly}
+              onClick={() => setEditingRole(null)}
+            >
               + New role
             </button>
           </div>
@@ -126,10 +136,10 @@ export default function AdminDashboard({
                 <div className="truncate text-sm text-ink/60">{r.role}</div>
               </div>
               <div className="flex shrink-0 gap-2">
-                <button className={btnGhost} onClick={() => setEditingRole(r)}>
+                <button className={btnGhost} disabled={readOnly} onClick={() => setEditingRole(r)}>
                   Edit
                 </button>
-                <button className={btnDanger} onClick={() => removeRole(r.id)}>
+                <button className={btnDanger} disabled={readOnly} onClick={() => removeRole(r.id)}>
                   Delete
                 </button>
               </div>

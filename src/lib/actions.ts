@@ -7,7 +7,17 @@ import {
   deleteProject,
   upsertRole,
   deleteRole,
+  isReadOnlyDeployment,
 } from "./data";
+
+/** Writes are impossible on hosted deployments without a database. */
+function assertWritable() {
+  if (isReadOnlyDeployment()) {
+    throw new Error(
+      "Read-only deployment: connect Supabase to edit content online."
+    );
+  }
+}
 
 function slugify(input: string): string {
   return input
@@ -30,6 +40,7 @@ function revalidateAll(slug?: string | null) {
 }
 
 export async function saveProjectAction(fd: FormData): Promise<void> {
+  assertWritable();
   const id = str(fd, "id") || `p_${crypto.randomUUID()}`;
   const title = str(fd, "title");
   const link_type = (str(fd, "link_type") || "page") as Project["link_type"];
@@ -58,12 +69,14 @@ export async function saveProjectAction(fd: FormData): Promise<void> {
 }
 
 export async function deleteProjectAction(fd: FormData): Promise<void> {
+  assertWritable();
   const id = str(fd, "id");
   if (id) await deleteProject(id);
   revalidateAll();
 }
 
 export async function saveRoleAction(fd: FormData): Promise<void> {
+  assertWritable();
   const id = str(fd, "id") || `r_${crypto.randomUUID()}`;
   const startRaw = str(fd, "start_year");
   const endRaw = str(fd, "end_year");
@@ -82,6 +95,7 @@ export async function saveRoleAction(fd: FormData): Promise<void> {
 }
 
 export async function deleteRoleAction(fd: FormData): Promise<void> {
+  assertWritable();
   const id = str(fd, "id");
   if (id) await deleteRole(id);
   revalidateAll();
