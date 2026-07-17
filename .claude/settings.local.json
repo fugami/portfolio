@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(pnpm -v)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(PORT=3210 npm run dev)",
+      "Bash(tee /tmp/portfolio-dev.log)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(qlmanage -t -s 800 -o /private/tmp/claude-501/-Users-jordanmitchell-Desktop-00-CREATIVE-ARCHIVE-02-CODE-ARCHIVE-2026-09-20-Portfolio-Site/761c1e91-0359-41da-ad10-425fd427d866/scratchpad '/Users/jordanmitchell/Desktop/00_CREATIVE ARCHIVE/02_CODE ARCHIVE/2026.09.20 Portfolio Site/public/uploads/Globe2.svg')",
+      "Bash(rm -f /private/tmp/claude-501/-Users-jordanmitchell-Desktop-00-CREATIVE-ARCHIVE-02-CODE-ARCHIVE-2026-09-20-Portfolio-Site/761c1e91-0359-41da-ad10-425fd427d866/scratchpad/*.svg.png)",
+      "Bash(qlmanage -t -s 300 -o /private/tmp/claude-501/-Users-jordanmitchell-Desktop-00-CREATIVE-ARCHIVE-02-CODE-ARCHIVE-2026-09-20-Portfolio-Site/761c1e91-0359-41da-ad10-425fd427d866/scratchpad '/Users/jordanmitchell/Desktop/00_CREATIVE ARCHIVE/02_CODE ARCHIVE/2026.09.20 Portfolio Site/public/uploads/Globesvg.svg' '/Users/jordanmitchell/Desktop/00_CREATIVE ARCHIVE/02_CODE ARCHIVE/2026.09.20 Portfolio Site/public/uploads/Globe2.svg')",
+      "Bash(python3 *)",
+      "Bash(find '/Users/jordanmitchell/Desktop/00_CREATIVE ARCHIVE/02_CODE ARCHIVE/2026.09.20 Portfolio Site/src' -iname *markdown*)"
+    ]
+  }
+}

@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Warm paper + oxblood ink, sampled from the design boards. */
+  --paper: #d7d4cb;
+  --paper-2: #dedbd2;
+  --ink: #7c1d18;
+  --ink-strong: #691310;
+  --ink-faded: rgba(105, 19, 16, 0.5);
+
+  /* "ernie" loads from the Adobe kit when NEXT_PUBLIC_ADOBE_KIT_ID is set;
+     until then the Caveat fallback (via next/font) renders. */
+  --font-hand: "adobe-handwriting-ernie", var(--font-caveat), "Bradley Hand", "Segoe Script", cursive;
+  --font-garamond: var(--font-eb-garamond), "EB Garamond", Garamond, "Times New Roman", serif;
+}
+
+html {
+  color: var(--ink);
+  background-color: var(--paper);
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--paper);
+  font-family: var(--font-hand);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle paper grain overlaid across everything. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: multiply;
+  opacity: 0.05;
+}
+
+/* Soft lighting: brighter center, gently darker edges (as in the boards). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 100% at 50% 35%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(70, 55, 45, 0.08) 100%
+  );
+}
+
+/* Keep real content above the texture layers. */
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+::selection {
+  background: rgba(124, 29, 24, 0.18);
+}
+
+/* Tab underline draws itself in. */
+@keyframes tab-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Expanded role detail: a soft, ink-settling reveal. */
+@keyframes ink-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+.ink-reveal {
+  animation: ink-reveal 520ms ease-out 120ms both;
+}
+
+/* ---- Project page body (EB Garamond) ------------------------------------ */
+.prose-garamond {
+  font-family: var(--font-garamond);
+  color: var(--ink);
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+.prose-garamond p {
+  margin: 0 0 1.4rem;
+}
+.prose-garamond h2 {
+  font-family: var(--font-garamond);
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  font-size: 1.55rem;
+  text-align: center;
+  margin: 2.6rem 0 1.6rem;
+}
+.prose-garamond h3 {
+  font-family: var(--font-garamond);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  font-size: 1.25rem;
+  margin: 2rem 0 1rem;
+}
+.prose-garamond a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-garamond ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin: 0 0 1.4rem;
+}
+.prose-garamond ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+  margin: 0 0 1.4rem;
+}
+/* The rich editor wraps list-item text in <p>; keep bullets tight. */
+.prose-garamond li p {
+  margin: 0;
+}
+.prose-garamond u {
+  text-underline-offset: 3px;
+}
+.prose-garamond hr {
+  width: 6rem;
+  margin: 2.4rem auto;
+  border: 0;
+  border-top: 1px solid var(--ink-faded);
+}
+.prose-garamond img {
+  max-width: 100%;
+  margin: 1.5rem auto;
+  display: block;
+}
+.prose-garamond video {
+  max-width: 100%;
+  margin: 1.8rem auto;
+  display: block;
+}
+/* Runs of back-to-back images render as a centered photo strip: every image
+   shares a row height, so portraits sit side by side instead of stacking. */
+.prose-garamond .collage {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.6rem 0;
+}
+.prose-garamond .collage img {
+  height: 14rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: cover;
+  margin: 0;
+  display: block;
+}
+@media (max-width: 640px) {
+  .prose-garamond .collage img {
+    height: 9rem;
+  }
+}
+.prose-garamond blockquote {
+  border-left: 2px solid var(--ink-faded);
+  padding-left: 1rem;
+  font-style: italic;
+}
+.prose-garamond div[data-youtube-video] {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.8rem 0;
+}
+.prose-garamond div[data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---- Rich text editor (admin) -------------------------------------------- */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--ink-faded);
+}
+.tiptap img.ProseMirror-selectednode,
+.tiptap video.ProseMirror-selectednode {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ---- Roles expand details (handwriting) --------------------------------- */
+.role-details ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.role-details li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin: 0.35rem 0;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+.role-details li::before {
+  content: "•";
+  position: absolute;
+  left: 0.2rem;
+}
+.role-details ul ul {
+  margin-top: 0.2rem;
+}
+.role-details ul ul li::before {
+  content: "";
+}
